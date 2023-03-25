@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 )
 
 // Handler
-
 func home(w http.ResponseWriter, r *http.Request) {
 
 	if r.URL.Path != "/" {
@@ -34,8 +32,8 @@ func snippetView(w http.ResponseWriter, r *http.Request)  {
 // Add a snippetCreate handler function.
 func snippetCreate(w http.ResponseWriter, r *http.Request)  {
 
-	if r.Method != "POST" {
-		w.Header().Set("Allow", "POST") // first parameter is header name and second is the value
+	if r.Method !=http.MethodPost {
+		w.Header().Set("Allow", http.MethodPost) // first parameter is header name and second is the value
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed )
 
 		// w.WriteHeader(405)
@@ -43,17 +41,4 @@ func snippetCreate(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 	w.Write([]byte("Create a new snippet..."))
-}
-
-func main()  {
-	// servermux = router
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/snippet/view", snippetView)
-	mux.HandleFunc("/snippet/create", snippetCreate)
-
-	// Use the http.ListenAndServe() function to start a new web server
-	log.Print("Starting server on :4000")
-	err := http.ListenAndServe(":4000", mux)
-	log.Fatal(err)
 }
